@@ -1,5 +1,9 @@
 package letapp.net.mokayada.dao;
 
-public interface AppUserRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import letapp.net.mokayada.entities.AppUser;
+
+public interface AppUserRepository extends JpaRepository<AppUser, String>{
 
 }

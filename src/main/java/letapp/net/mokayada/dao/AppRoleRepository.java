@@ -1,5 +1,9 @@
 package letapp.net.mokayada.dao;
 
-public interface AppRoleRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import letapp.net.mokayada.entities.AppRole;
+
+public interface AppRoleRepository extends JpaRepository<AppRole, Long> {
 
 }
