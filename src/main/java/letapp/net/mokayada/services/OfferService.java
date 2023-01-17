@@ -2,7 +2,7 @@ package letapp.net.mokayada.services;
 
 import java.util.List;
 
-import letapp.net.mokayada.entities.Offer;
+import letapp.net.mokayada.domaine.OfferVo;
 
 public interface OfferService {
 

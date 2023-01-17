@@ -1,5 +1,10 @@
 package letapp.net.mokayada.domaine;
 
-public class DealVo {
+import lombok.Data;
 
+@Data
+public class DealVo {
+	private String id;
+	private OfferVo offer;
+	private ProposalVo proposal;
 }

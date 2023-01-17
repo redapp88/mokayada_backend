@@ -1,5 +1,7 @@
 package letapp.net.mokayada.domaine;
 
-public class ProposalVo {
-
+import lombok.Data;
+@Data
+public class ProposalVo extends OfferVo {
+	private OfferVo offer;
 }

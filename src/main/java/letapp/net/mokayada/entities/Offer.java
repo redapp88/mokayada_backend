@@ -26,6 +26,8 @@ public class Offer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String title;
+	private String description;
 	private Date CreationDate;
 	@OneToMany
 	private List<Product> products = new ArrayList<Product>();
@@ -35,6 +37,5 @@ public class Offer {
 	private List<Proposal> proposales = new ArrayList<Proposal>();;
 	@OneToOne(mappedBy = "offer")
 	private Deal deal;
-
 
 }
