@@ -16,9 +16,9 @@ import letapp.dev.mokayada.services.OfferService;
 public class OfferController {
 	@Autowired
 	private OfferService offerService;
-@GetMapping()
-public Offer getOffer(@RequestParam Long id) {
-	return this.offerService.getOffer(id);
+@GetMapping("/getOne")
+public Offer getOffer(@RequestParam Long offerId) {
+	return this.offerService.getOffer(offerId);
 }
 @GetMapping("/byParams")
 public Page<Offer> getOffers(@RequestParam(defaultValue = "*") String city,@RequestParam(defaultValue = "*") String categorie,@RequestParam(defaultValue = "") String keyword,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "5") int size){
