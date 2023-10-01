@@ -31,8 +31,10 @@ private String phone;
 private String Email;
 private Date subscribeDate;
 private Date birthDate;
+private String Password;
 @ManyToOne
 private AppRole role;
+
 
 
 public AppUser( String username, AppRole role) {
