@@ -39,9 +39,9 @@ public class AuthController {
     public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse response) {
         try {
             authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword(),
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword(),
                             new ArrayList<>()));
-            final UserDetails user = jpaUserDetailsService.loadUserByUsername(request.getEmail());
+            final UserDetails user = jpaUserDetailsService.loadUserByUsername(request.getUsername());
             if (user != null) {
                 String jwt = jwtUtils.generateToken(user);
                 Cookie cookie = new Cookie("jwt", jwt);

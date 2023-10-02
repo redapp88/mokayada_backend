@@ -7,19 +7,25 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import letapp.dev.mokayada.entities.AppUser;
 import letapp.dev.mokayada.security.users.model.Users;
 
 public class UserSecurity implements UserDetails {
-    private final Users users;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final AppUser users;
 
 
-    public UserSecurity(Users users) {
+    public UserSecurity(AppUser users) {
         this.users = users;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(users.getRoles().split(","))
+    	String[] roles= {users.getRole().getRoleName()};
+        return Arrays.stream(roles)
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }
