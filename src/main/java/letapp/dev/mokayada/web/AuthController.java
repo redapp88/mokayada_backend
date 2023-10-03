@@ -1,4 +1,4 @@
-package letapp.dev.mokayada.security.auth.controller;
+package letapp.dev.mokayada.web;
 
 
 
@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import letapp.dev.mokayada.security.UserSecurity.dao.JpaUserDetailsService;
-import letapp.dev.mokayada.security.UserSecurity.model.UserSecurity;
-import letapp.dev.mokayada.security.auth.request.AuthenticationRequest;
-import letapp.dev.mokayada.security.auth.service.AuthService;
-import letapp.dev.mokayada.security.config.JwtUtils;
-import letapp.dev.mokayada.security.users.Requests.UsersRequest;
+import letapp.dev.mokayada.requests.AuthenticationRequest;
+import letapp.dev.mokayada.security.JwtUtils;
+import letapp.dev.mokayada.services.AppUsersService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,9 +27,8 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final JpaUserDetailsService jpaUserDetailsService;
+    private final AppUsersService jpaUserDetailsService;
 
-    private final AuthService authService;
 
     private final JwtUtils jwtUtils;
 
@@ -49,7 +46,7 @@ public class AuthController {
 //                cookie.setSecure(true);
                 cookie.setHttpOnly(true);
                 cookie.setPath("/"); // Global
-                response.addCookie(cookie);
+                //response.addCookie(cookie);
                 return ResponseEntity.ok(jwt);
             }
             return ResponseEntity.status(400).body("Error authenticating");
@@ -59,9 +56,11 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserSecurity> register(@RequestBody UsersRequest user) throws Exception {
-        return ResponseEntity.ok(authService.AddUser(user).map(UserSecurity::new).orElseThrow(() -> new Exception("Unknown")));
-    }
+	/*
+	 * @PostMapping("/register") public ResponseEntity<UserSecurity>
+	 * register(@RequestBody UsersRequest user) throws Exception { return
+	 * ResponseEntity.ok(authService.AddUser(user).map(UserSecurity::new).
+	 * orElseThrow(() -> new Exception("Unknown"))); }
+	 */
 
 }

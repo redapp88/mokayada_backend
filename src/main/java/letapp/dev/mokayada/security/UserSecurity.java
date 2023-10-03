@@ -1,4 +1,4 @@
-package letapp.dev.mokayada.security.UserSecurity.model;
+package letapp.dev.mokayada.security;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import letapp.dev.mokayada.entities.AppUser;
-import letapp.dev.mokayada.security.users.model.Users;
 
 public class UserSecurity implements UserDetails {
     /**

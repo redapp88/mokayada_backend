@@ -1,4 +1,4 @@
-package letapp.dev.mokayada.security.auth.request;
+package letapp.dev.mokayada.requests;
 
 
 

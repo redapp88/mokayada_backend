@@ -1,4 +1,4 @@
-package letapp.dev.mokayada.security.config;
+package letapp.dev.mokayada.security;
 
 
 
@@ -16,8 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import letapp.dev.mokayada.security.UserSecurity.dao.JpaUserDetailsService;
+import letapp.dev.mokayada.services.AppUsersService;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -28,7 +27,7 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-    private final JpaUserDetailsService jpaUserDetailsService;
+    private final AppUsersService jpaUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

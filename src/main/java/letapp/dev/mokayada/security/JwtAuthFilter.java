@@ -1,4 +1,4 @@
-package letapp.dev.mokayada.security.config;
+package letapp.dev.mokayada.security;
 
 import java.io.IOException;
 
@@ -14,14 +14,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import letapp.dev.mokayada.security.UserSecurity.dao.JpaUserDetailsService;
+import letapp.dev.mokayada.services.AppUsersService;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JpaUserDetailsService jpaUserDetailsService;
+    private final AppUsersService jpaUserDetailsService;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -37,7 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 //            return;
 //        }
 
-        for (Cookie cookie : request.getCookies()) {
+        for (Cookie cookie : request.getCookies() ) {
             if (cookie.getName().equals("jwt")) {
                 jwtToken = cookie.getValue();
 //                System.out.println(cookie.getValue());

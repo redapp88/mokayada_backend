@@ -1,4 +1,4 @@
-package letapp.dev.mokayada.security.config;
+package letapp.dev.mokayada.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
