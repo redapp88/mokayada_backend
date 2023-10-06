@@ -1,64 +1,65 @@
 package letapp.dev.mokayada.security;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import letapp.dev.mokayada.services.AppUsersService;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+			FilterChain filterChain)
+			throws ServletException, java.io.IOException {
 
-    private final AppUsersService jpaUserDetailsService;
-    private final JwtUtils jwtUtils;
+	response.addHeader("Access-Control-Allow-Origin", "*");
+	response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+	response.addHeader("Access-Control-Allow-Headers","Origin, Accept, X-requested-With, "
+			+ "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,"
+			+ "Authorization");
+	response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin,"
+			+ "Access-Control-Allow-Credentials, Authorization");
+	
+	if(request.getMethod().equals("OPTIONS")) {
+		response.setStatus(HttpServletResponse.SC_OK);
+	}
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-//        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String userEmail;
-        String jwtToken = null;
+	else {
+	String jwt=request.getHeader(SecurityConstants.HEADER_STRING);
 
-
-//        if (authHeader == null || !authHeader.startsWith("Bearer")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-
-        for (Cookie cookie : request.getCookies() ) {
-            if (cookie.getName().equals("jwt")) {
-                jwtToken = cookie.getValue();
-//                System.out.println(cookie.getValue());
-            }
-        }
-        if (jwtToken == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-//        jwtToken = authHeader.substring(7);
-        userEmail = jwtUtils.extractUsername(jwtToken);
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = jpaUserDetailsService.loadUserByUsername(userEmail);
-            if (jwtUtils.validateToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
-        filterChain.doFilter(request, response);
-    }
-}
+	if(jwt==null || !jwt.startsWith(SecurityConstants.TOKEN_PREFIX)){
+		filterChain.doFilter(request, response); return;
+	}
+	Claims claims=Jwts.parser()
+			.setSigningKey(SecurityConstants.SECRET)
+			.parseClaimsJws(jwt.replace(SecurityConstants.TOKEN_PREFIX, ""))
+			.getBody();
+	String username=claims.getSubject();
+	ArrayList<Map<String,String>> roles=(ArrayList<Map<String,String>>)claims.get("roles");
+	Collection<GrantedAuthority> authorities= new ArrayList<>();
+	roles.forEach(r->{
+		authorities.add(new SimpleGrantedAuthority(r.get("authority")));
+	});
+	UsernamePasswordAuthenticationToken authentificatedUser=
+			new UsernamePasswordAuthenticationToken(username,null, authorities);
+	SecurityContextHolder.getContext().setAuthentication(authentificatedUser);
+	filterChain.doFilter(request, response);
+			
+	}
+}}

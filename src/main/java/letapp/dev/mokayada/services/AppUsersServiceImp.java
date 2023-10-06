@@ -6,7 +6,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import letapp.dev.mokayada.dao.AppUserRepository;
-import letapp.dev.mokayada.security.UserSecurity;
+import letapp.dev.mokayada.security.ExtendedUser;
+
 @Service
 public class AppUsersServiceImp implements AppUsersService {
 	@Autowired
@@ -14,7 +15,7 @@ public class AppUsersServiceImp implements AppUsersService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return usersRepository.findByUsername(username).map(UserSecurity::new)
+		return usersRepository.findByUsername(username).map(ExtendedUser::new)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found!"));
 	}
 

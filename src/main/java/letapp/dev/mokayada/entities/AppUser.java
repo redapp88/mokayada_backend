@@ -1,6 +1,11 @@
 package letapp.dev.mokayada.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +37,7 @@ private String Email;
 private Date subscribeDate;
 private Date birthDate;
 private String Password;
+private String state;
 @ManyToOne
 private AppRole role;
 
@@ -42,6 +48,15 @@ public AppUser( String username, AppRole role) {
 	this.username = username;
 	this.subscribeDate = new Date();
 	this.role = role;
+	this.state="panding";
+}
+
+public List <GrantedAuthority>rolesToAuthorities() {
+	ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	GrantedAuthority authority=new SimpleGrantedAuthority(this.getRole().getRoleName());
+	authorities.add(authority);
+	return authorities;
+	
 }
 
 
