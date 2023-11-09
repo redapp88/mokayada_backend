@@ -32,7 +32,7 @@ public class OfferServiceImp implements OfferService {
 		 * System.out.println(this.formatParam(keyword)); System.out.println(page);
 		 * System.out.println(size);
 		 */
-		Offer offer = new Offer();
+
 		return this.offerRepository.getOffers(this.formatParam(city), this.formatParam(categorie), this.formatParam(keyword), PageRequest.of(page, size));
 
 	}

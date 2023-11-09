@@ -12,7 +12,7 @@ import letapp.dev.mokayada.entities.Offer;
 import letapp.dev.mokayada.services.OfferService;
 
 @RestController
-@RequestMapping("/offers")
+@RequestMapping("/api/v1/auth/offers")
 public class OfferController {
 	@Autowired
 	private OfferService offerService;
@@ -25,7 +25,7 @@ public Page<Offer> getOffers(@RequestParam(defaultValue = "*") String city,@Requ
 	return this.offerService.getListOffer(city, categorie, keyword,page,size);
 }
 @GetMapping("/byUser")
-public Page<Offer> getOffers(@PathVariable Long user_id,@RequestParam int page,@RequestParam int size ){
+public Page<Offer> getOffersByUser(@PathVariable Long user_id,@RequestParam int page,@RequestParam int size ){
 	return this.offerService.getListOffer(user_id,page,size);
 }
 

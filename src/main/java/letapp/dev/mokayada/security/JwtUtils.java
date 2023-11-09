@@ -43,7 +43,8 @@ public class JwtUtils {
         claims.put("firstname",userDetails.getFirstName());
         claims.put("lastname",userDetails.getLastName());
         claims.put("state",userDetails.getState());
-        System.out.println(claims);
+        claims.put("experition",SecurityConstants.EXPIRATION_TIME);
+        //System.out.println(claims);
         return createToken(claims, userDetails.getUsername());
     }
 

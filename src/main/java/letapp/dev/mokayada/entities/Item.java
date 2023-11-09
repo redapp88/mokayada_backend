@@ -1,8 +1,10 @@
 package letapp.dev.mokayada.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +29,7 @@ public class Item {
 	private Date creationDate;
 	@ManyToOne
 	private AppUser owner;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<AppPhoto> photos;
 	public Item(String title, String description, String status, List<AppPhoto> photos,AppUser owner) {
 		super();
@@ -37,6 +39,15 @@ public class Item {
 		this.status = status;
 		this.photos = photos;
 		this.owner = owner;
+	}
+	public Item(String title,String status,String description, AppUser owner) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.creationDate = new Date();
+		this.status = status;
+		this.owner = owner;
+		this.photos = new ArrayList<AppPhoto>();
 	}
 	
 	
