@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -51,7 +52,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			.parseClaimsJws(jwt.replace(SecurityConstants.TOKEN_PREFIX, ""))
 			.getBody();
 	String username=claims.getSubject();
-	ArrayList<Map<String,String>> roles=(ArrayList<Map<String,String>>)claims.get("roles");
+	ArrayList<Map<String,String>> roles=(ArrayList<Map<String,String>>)claims.get("authorities");
 	Collection<GrantedAuthority> authorities= new ArrayList<>();
 	roles.forEach(r->{
 		authorities.add(new SimpleGrantedAuthority(r.get("authority")));

@@ -17,7 +17,7 @@ import letapp.dev.mokayada.requests.AppPhotosRequest;
 import letapp.dev.mokayada.services.AppPhotoService;
 
 @RestController
-@RequestMapping("/api/v1/auth/photos")
+@RequestMapping("/api/v1/photos")
 public class PhotosController {
 	@Autowired
 	AppPhotoService appPhotosService;
