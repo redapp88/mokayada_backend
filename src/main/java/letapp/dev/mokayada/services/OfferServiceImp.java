@@ -1,19 +1,30 @@
 package letapp.dev.mokayada.services;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import letapp.dev.mokayada.dao.AppUserRepository;
 import letapp.dev.mokayada.dao.OfferRepository;
+import letapp.dev.mokayada.entities.AppUser;
 import letapp.dev.mokayada.entities.Offer;
+import letapp.dev.mokayada.requests.OfferRequest;
+import letapp.dev.mokayada.requests.ProposalRequest;
+import letapp.dev.mokayada.responses.ProposalWithOfferResponse;
 
 @Service
 public class OfferServiceImp implements OfferService {
 	@Autowired
 	private OfferRepository offerRepository;
+	@Autowired
+	private AppUserRepository appUserRepository;
 
 	@Override
 	public Offer getOffer(Long id) {
@@ -25,15 +36,14 @@ public class OfferServiceImp implements OfferService {
 	}
 
 	@Override
-	public Page<Offer> getListOffer(String city, String categorie, String keyword, int page, int size) {
+	public Page<Offer> getListOffer(String searcher,String city, String categorie, String keyword, int page, int size) {
 		/*
 		 * System.out.println(this.formatParam(city));
 		 * System.out.println(this.formatParam(categorie));
 		 * System.out.println(this.formatParam(keyword)); System.out.println(page);
 		 * System.out.println(size);
 		 */
-
-		return this.offerRepository.getOffers(this.formatParam(city), this.formatParam(categorie), this.formatParam(keyword), PageRequest.of(page, size));
+		return this.offerRepository.getOffers(searcher,this.formatParam(city), this.formatParam(categorie), this.formatParam(keyword), PageRequest.of(page, size));
 
 	}
 
@@ -49,4 +59,71 @@ public class OfferServiceImp implements OfferService {
 			return "%" + param + "%";
 	}
 
-}
+	@Override
+	public List<Offer> getOffersByUser(String username, String keyword) {
+		return this.offerRepository.getOffersByUser(username,formatParam(keyword));
+	}
+
+	@Override
+	public Offer add(OfferRequest request) {
+		Optional<AppUser> userOpt = this.appUserRepository.findByUsername(request.getUsername());
+		if (!userOpt.isPresent())
+			throw new RuntimeException("Utilisateur introuvable");
+		Offer newOffer = new Offer(request.getTitle(), request.getDescription(), "panding", request.getCity(),request.getCategorie(),null,userOpt.get());
+		
+		/*
+		 * request.getPhotoIds().forEach(id -> { Optional<AppPhoto> photoOpt =
+		 * this.appPhotosRepository.findById(id); if (photoOpt.isPresent())
+		 * newItem.getPhotos().add(photoOpt.get()); });
+		 */
+		return this.offerRepository.save(newOffer);
+	}
+
+	@Override
+	public Offer addProposal(ProposalRequest request) {
+		Offer offer = this.getOffer(request.getOfferId());
+		AppUser user = this.appUserRepository.getById(request.getUsername());
+		if(offer == null ||  user == null) 
+			throw new RuntimeException("Offre ou utilisateur introuvable");
+			Offer proposal = new Offer();
+			proposal.setOwner(user);
+			proposal.setItems(request.getItems());
+			proposal.setCreationDate(new Date());
+			proposal.setCategorie(null);
+			proposal.setCity(null);
+			proposal.setDescription(null);
+			proposal.setStatus("ACTIF");
+			proposal.setTitle("Proposal of "+user.getFirstName()+" "+user.getLastName()+" to "+ offer.getTitle());
+			proposal.setParentOffer(offer);
+			proposal = this.offerRepository.save(proposal);
+			offer.getPropositions().add(proposal);
+			offer=this.offerRepository.save(offer);
+			return this.offerRepository.save(proposal);
+		}
+
+	@Override
+	public Offer updateProposal(ProposalRequest request) {
+		Offer proposal = this.getOffer(request.getOfferId());
+		AppUser user = this.appUserRepository.getById(request.getUsername());
+		if(proposal == null ||  user == null) 
+			throw new RuntimeException("Offre ou utilisateur introuvable");
+			proposal.setItems(request.getItems());
+			return this.offerRepository.save(proposal);
+	}
+
+	@Override
+	public List<ProposalWithOfferResponse> getProposales(String username) {
+		return this.offerRepository.getProposalesByUsername(username).stream().map(
+o->new ProposalWithOfferResponse(o,o.getParentOffer())).collect(Collectors.toList());
+		
+	}
+
+	@Override
+	public void delete(Long id) {
+		this.offerRepository.deleteById(id);
+		
+	}
+		
+	}
+
+

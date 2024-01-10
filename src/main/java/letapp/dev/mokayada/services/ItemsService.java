@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import letapp.dev.mokayada.entities.Item;
 import letapp.dev.mokayada.requests.ItemRequest;
+import letapp.dev.mokayada.responses.ItemsListsResponse;
 
 public interface ItemsService {
 
@@ -18,6 +19,12 @@ public interface ItemsService {
 	public void delete(Long id);
 
 	public Item getItem(Long id);
+
+	public ItemsListsResponse getItemsByOffer(String username,Long offerId);
+
+	public void saveItemsToOffer(Long offerId, List<Item> items);
+
+	public List<Item> getItemsByUser(String username);
 	
 
 }

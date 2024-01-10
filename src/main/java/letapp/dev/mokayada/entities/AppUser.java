@@ -1,5 +1,6 @@
 package letapp.dev.mokayada.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,12 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser {
+
+public class AppUser implements Serializable {
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 @Id
 private String username;
 private String firstName;

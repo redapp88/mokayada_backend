@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +33,9 @@ public class Item {
 	private AppUser owner;
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<AppPhoto> photos;
+	@JsonIgnore
+	@ManyToOne
+	private Offer offer;
 	public Item(String title, String description, String status, List<AppPhoto> photos,AppUser owner) {
 		super();
 		this.title = title;
@@ -39,6 +44,7 @@ public class Item {
 		this.status = status;
 		this.photos = photos;
 		this.owner = owner;
+		this.offer = null;
 	}
 	public Item(String title,String status,String description, AppUser owner) {
 		super();

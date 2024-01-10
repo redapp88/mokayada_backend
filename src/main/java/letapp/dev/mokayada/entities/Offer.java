@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,13 +42,17 @@ public class Offer implements Serializable {
 	private String status;
 	private String city;
 	private String categorie;
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Offer parentOffer;
-	@OneToMany
+	
+	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Offer> propositions;
+
 	@ManyToOne
 	private AppUser owner;
-	@ManyToMany
+
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	private List<Item> items;
 
 	public Offer(String title, String description, String status, String city, String categorie, Offer parentOffer,

@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import letapp.dev.mokayada.entities.AppPhoto;
-import letapp.dev.mokayada.entities.AppUser;
 import letapp.dev.mokayada.entities.Item;
 import letapp.dev.mokayada.requests.ItemRequest;
+import letapp.dev.mokayada.responses.ItemsListsResponse;
 import letapp.dev.mokayada.services.ItemsService;
 
 @RestController
@@ -40,6 +39,11 @@ public class ItemsController {
 	public Item addItem(@RequestBody ItemRequest request) {
 		return this.itemsService.addItem(request);
 	}
+	
+	@PostMapping("/saveToOffer")
+	public void saveItemsToOffer(@RequestParam Long offerId,@RequestBody List<Item> items) {
+		 this.itemsService.saveItemsToOffer(offerId,items);
+	}
 
 	@PutMapping("/update/{id}")
 	public Item updateItem(@PathVariable Long  id,@RequestBody  ItemRequest request) {
@@ -49,5 +53,18 @@ public class ItemsController {
 	public void deleteItem(@PathVariable Long id) {
 		  this.itemsService.delete(id);
 	}
+	@GetMapping("/byOffer")
+	public ItemsListsResponse geItemsByOffer(@RequestParam String username,@RequestParam Long offerId) {
+		return this.itemsService.getItemsByOffer(username,offerId);
+		
+		
+	}
+	@GetMapping("/byUser")
+	public List<Item> geItemsUser(@RequestParam String username) {
+		return this.itemsService.getItemsByUser(username);
+		
+		
+	}
+
 
 }

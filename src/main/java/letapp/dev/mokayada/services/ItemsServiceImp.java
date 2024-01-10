@@ -1,5 +1,7 @@
 package letapp.dev.mokayada.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,12 @@ import org.springframework.stereotype.Service;
 import letapp.dev.mokayada.dao.AppPhotosRepository;
 import letapp.dev.mokayada.dao.AppUserRepository;
 import letapp.dev.mokayada.dao.ItemRepository;
-import letapp.dev.mokayada.entities.AppPhoto;
+import letapp.dev.mokayada.dao.OfferRepository;
 import letapp.dev.mokayada.entities.AppUser;
 import letapp.dev.mokayada.entities.Item;
+import letapp.dev.mokayada.entities.Offer;
 import letapp.dev.mokayada.requests.ItemRequest;
+import letapp.dev.mokayada.responses.ItemsListsResponse;
 
 @Service
 public class ItemsServiceImp implements ItemsService {
@@ -23,6 +27,11 @@ public class ItemsServiceImp implements ItemsService {
 	private AppUserRepository appUserRepository;
 	@Autowired
 	private AppPhotosRepository appPhotosRepository;
+	@Autowired
+	private OfferService offerService;
+	@Autowired
+	private OfferRepository offerRepository;
+	
 
 	@Override
 	public Page<Item> getListItems(String username, int page, int size) {
@@ -90,6 +99,43 @@ public class ItemsServiceImp implements ItemsService {
 			throw new RuntimeException("Item introuvable");
 		}
 		return itemOpt.get();
+	}
+
+
+
+	@Override
+	public ItemsListsResponse getItemsByOffer(String username,Long offerId) {
+		List<Item> offerItems = this.itemRepository.getByOfferId(offerId);
+		List<Item> usersItems=this.itemRepository.getItemsByUser(username);
+		List<Item>availableItems = new ArrayList<Item>();
+		usersItems.stream().forEach(e->{
+			if(!offerItems.contains(e))
+				availableItems.add(e);
+		});
+		 return new ItemsListsResponse(availableItems,offerItems);
+	}
+
+
+
+	@Override
+	public void saveItemsToOffer(Long offerId, List<Item> items) {
+		Offer offer = this.offerService.getOffer(offerId);
+		items.forEach(i->{
+			i.setOffer(offer);
+			this.itemRepository.save(i);
+		});
+		offer.getItems().clear();
+		offer.getItems().addAll(items);
+		offerRepository.save(offer);
+		
+		
+	}
+
+
+
+	@Override
+	public List<Item> getItemsByUser(String username) {
+		return this.itemRepository.getItemsByUser(username);
 	}
 
 }
