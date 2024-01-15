@@ -57,9 +57,9 @@ public List<ProposalWithOfferResponse> getProposales(@RequestParam(defaultValue 
 	return this.offerService.getProposales(username);
 }
 
-@DeleteMapping("/delete/{id}")
+@DeleteMapping("/deleteProposal/{id}")
 public void deleteOffer(@PathVariable Long id){
-	 this.offerService.delete(id);
+	 this.offerService.deleteProposal(id);
 }
 
 

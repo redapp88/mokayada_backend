@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import letapp.dev.mokayada.entities.Item;
 import letapp.dev.mokayada.requests.ItemRequest;
+import letapp.dev.mokayada.requests.OfferWithItemsRequest;
 import letapp.dev.mokayada.responses.ItemsListsResponse;
 import letapp.dev.mokayada.services.ItemsService;
 
@@ -41,8 +42,8 @@ public class ItemsController {
 	}
 	
 	@PostMapping("/saveToOffer")
-	public void saveItemsToOffer(@RequestParam Long offerId,@RequestBody List<Item> items) {
-		 this.itemsService.saveItemsToOffer(offerId,items);
+	public void saveItemsToOffer(@RequestParam Long offerId,@RequestBody OfferWithItemsRequest offerWithItemsRequest) {
+		 this.itemsService.saveItemsToOffer(offerId,offerWithItemsRequest);
 	}
 
 	@PutMapping("/update/{id}")

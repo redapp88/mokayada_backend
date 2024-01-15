@@ -43,16 +43,16 @@ public class Offer implements Serializable {
 	private String city;
 	private String categorie;
 	@JsonIgnore
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne()
 	private Offer parentOffer;
 	
-	@OneToMany(cascade = CascadeType.PERSIST)
+	@OneToMany()
 	private List<Offer> propositions;
 
-	@ManyToOne
+	@ManyToOne()
 	private AppUser owner;
 
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany()
 	private List<Item> items;
 
 	public Offer(String title, String description, String status, String city, String categorie, Offer parentOffer,

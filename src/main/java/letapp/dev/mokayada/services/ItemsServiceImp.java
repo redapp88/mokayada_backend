@@ -17,6 +17,7 @@ import letapp.dev.mokayada.entities.AppUser;
 import letapp.dev.mokayada.entities.Item;
 import letapp.dev.mokayada.entities.Offer;
 import letapp.dev.mokayada.requests.ItemRequest;
+import letapp.dev.mokayada.requests.OfferWithItemsRequest;
 import letapp.dev.mokayada.responses.ItemsListsResponse;
 
 @Service
@@ -118,14 +119,18 @@ public class ItemsServiceImp implements ItemsService {
 
 
 	@Override
-	public void saveItemsToOffer(Long offerId, List<Item> items) {
+	public void saveItemsToOffer(Long offerId, OfferWithItemsRequest offerWithItemsRequest) {
 		Offer offer = this.offerService.getOffer(offerId);
-		items.forEach(i->{
+		offerWithItemsRequest.getItems().forEach(i->{
 			i.setOffer(offer);
 			this.itemRepository.save(i);
 		});
 		offer.getItems().clear();
-		offer.getItems().addAll(items);
+		offer.getItems().addAll(offerWithItemsRequest.getItems());
+		offer.setTitle(offerWithItemsRequest.getOfferRequest().getTitle());
+		offer.setDescription(offerWithItemsRequest.getOfferRequest().getDescription());
+		offer.setCity(offerWithItemsRequest.getOfferRequest().getCity());
+		offer.setCategorie(offerWithItemsRequest.getOfferRequest().getCategorie());
 		offerRepository.save(offer);
 		
 		

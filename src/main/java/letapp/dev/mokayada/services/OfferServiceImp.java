@@ -69,7 +69,7 @@ public class OfferServiceImp implements OfferService {
 		Optional<AppUser> userOpt = this.appUserRepository.findByUsername(request.getUsername());
 		if (!userOpt.isPresent())
 			throw new RuntimeException("Utilisateur introuvable");
-		Offer newOffer = new Offer(request.getTitle(), request.getDescription(), "panding", request.getCity(),request.getCategorie(),null,userOpt.get());
+		Offer newOffer = new Offer(request.getTitle(), request.getDescription(), "FREE", request.getCity(),request.getCategorie(),null,userOpt.get());
 		
 		/*
 		 * request.getPhotoIds().forEach(id -> { Optional<AppPhoto> photoOpt =
@@ -93,12 +93,14 @@ public class OfferServiceImp implements OfferService {
 			proposal.setCity(null);
 			proposal.setDescription(null);
 			proposal.setStatus("ACTIF");
-			proposal.setTitle("Proposal of "+user.getFirstName()+" "+user.getLastName()+" to "+ offer.getTitle());
+			proposal.setTitle("Proposition à l'offre "+ offer.getTitle());
 			proposal.setParentOffer(offer);
 			proposal = this.offerRepository.save(proposal);
 			offer.getPropositions().add(proposal);
 			offer=this.offerRepository.save(offer);
-			return this.offerRepository.save(proposal);
+			 this.offerRepository.save(proposal);
+			 this.UpdateOfferStatus(offer);
+			 return null;
 		}
 
 	@Override
@@ -119,10 +121,23 @@ o->new ProposalWithOfferResponse(o,o.getParentOffer())).collect(Collectors.toLis
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void deleteProposal(Long id) {
+		Offer proposal = this.getOffer(id);
+		Offer parentOffer = proposal.getParentOffer();
+		parentOffer.getPropositions().remove(proposal);
 		this.offerRepository.deleteById(id);
+		this.UpdateOfferStatus(parentOffer);
 		
 	}
+	
+	private void UpdateOfferStatus(Offer offer) {
+		if(offer.getPropositions().size()>0)
+			offer.setStatus("HASPROPOSALS");
+		else 
+			offer.setStatus("FREE");
+	}
+
+
 		
 	}
 
