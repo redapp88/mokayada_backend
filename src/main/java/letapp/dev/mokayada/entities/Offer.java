@@ -19,12 +19,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString
 public class Offer implements Serializable {
 
 	
@@ -70,4 +72,10 @@ public class Offer implements Serializable {
 		this.items = new ArrayList<Item>();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+	return ((Offer)obj).id.equals(this.id);
+	}
+
+	
 }

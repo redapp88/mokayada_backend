@@ -62,6 +62,7 @@ public class OfferServiceImp implements OfferService {
 	@Override
 	public List<Offer> getOffersByUser(String username, String keyword) {
 		return this.offerRepository.getOffersByUser(username,formatParam(keyword));
+		
 	}
 
 	@Override
@@ -70,6 +71,9 @@ public class OfferServiceImp implements OfferService {
 		if (!userOpt.isPresent())
 			throw new RuntimeException("Utilisateur introuvable");
 		Offer newOffer = new Offer(request.getTitle(), request.getDescription(), "FREE", request.getCity(),request.getCategorie(),null,userOpt.get());
+		newOffer.setId(1L);
+		System.out.println("§§§§§§§§§§§§§§§§");
+		System.out.println(newOffer);
 		
 		/*
 		 * request.getPhotoIds().forEach(id -> { Optional<AppPhoto> photoOpt =
@@ -99,7 +103,7 @@ public class OfferServiceImp implements OfferService {
 			offer.getPropositions().add(proposal);
 			offer=this.offerRepository.save(offer);
 			 this.offerRepository.save(proposal);
-			 this.UpdateOfferStatus(offer);
+			 this.updateOfferStatus(offer);
 			 return null;
 		}
 
@@ -126,15 +130,32 @@ o->new ProposalWithOfferResponse(o,o.getParentOffer())).collect(Collectors.toLis
 		Offer parentOffer = proposal.getParentOffer();
 		parentOffer.getPropositions().remove(proposal);
 		this.offerRepository.deleteById(id);
-		this.UpdateOfferStatus(parentOffer);
+		this.updateOfferStatus(parentOffer);
 		
 	}
 	
-	private void UpdateOfferStatus(Offer offer) {
+	private void updateOfferStatus(Offer offer) {
 		if(offer.getPropositions().size()>0)
 			offer.setStatus("HASPROPOSALS");
 		else 
 			offer.setStatus("FREE");
+	}
+
+	@Override
+	public Offer acceptProposal(Offer proposal) {
+		Offer loadedProposal=this.getOffer(proposal.getId());
+		loadedProposal.setStatus("ACCEPTED");
+		loadedProposal.getParentOffer().setStatus("CONCLUDED");
+		this.offerRepository.save(loadedProposal);
+		return loadedProposal;
+		
+	}
+
+	@Override
+	public void deleteOffer(Long id) {
+		Offer offer = this.getOffer(id);
+		this.offerRepository.delete(offer);
+		
 	}
 
 

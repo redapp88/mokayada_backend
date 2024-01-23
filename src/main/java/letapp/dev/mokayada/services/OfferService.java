@@ -21,4 +21,6 @@ public interface OfferService  {
 	public Offer updateProposal(ProposalRequest request);
 	public List<ProposalWithOfferResponse> getProposales(String username);
 	public void deleteProposal(Long id);
+	public Offer acceptProposal(Offer proposal);
+	public void deleteOffer(Long id);
 }

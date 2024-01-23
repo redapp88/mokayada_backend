@@ -58,9 +58,17 @@ public List<ProposalWithOfferResponse> getProposales(@RequestParam(defaultValue 
 }
 
 @DeleteMapping("/deleteProposal/{id}")
-public void deleteOffer(@PathVariable Long id){
+public void deleteProposal(@PathVariable Long id){
 	 this.offerService.deleteProposal(id);
 }
 
+@DeleteMapping("/deleteOffer/{id}")
+public void deleteOffer(@PathVariable Long id){
+	 this.offerService.deleteOffer(id);
+}
 
+@PutMapping("/acceptProposal/{id}")
+public Offer acceptProposal(@PathVariable Long id,@RequestBody Offer proposal){
+	return this.offerService.acceptProposal(proposal);
+}
 }
