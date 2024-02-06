@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import letapp.dev.mokayada.entities.Item;
 import letapp.dev.mokayada.entities.Offer;
 import letapp.dev.mokayada.responses.ProposalWithOfferResponse;
 
@@ -21,5 +22,11 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
 	public Page<Offer> getOffers(@Param("userId")Long userId, Pageable pageable);
 	@Query("select o from Offer o where o.parentOffer is not null and o.owner.username like :username")
 	public List<Offer> getProposalesByUsername(@Param("username")String username);
+	@Query("select o from Offer o where o.owner.username like :username and o.status like 'CONCLUDED'")
+	public List<Offer> getMyConcludedOffers(@Param("username")String username);
+	@Query("select o from Offer o where o.owner.username like :username and o.status like 'ACCEPTED'")
+	public List<Offer> getAcceptedProposals(@Param("username")String username);
+	@Query("select o from Offer o join o.items item where item = :item")
+	public List<Offer> getByItem(@Param("item")Item item);
 
 }

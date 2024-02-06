@@ -6,4 +6,6 @@ import letapp.dev.mokayada.entities.AppRole;
 
 public interface AppRoleRepository extends JpaRepository<AppRole, Long> {
 
+	public AppRole getByroleName(String string);
+
 }

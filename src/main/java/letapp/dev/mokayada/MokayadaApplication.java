@@ -1,22 +1,17 @@
 package letapp.dev.mokayada;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import letapp.dev.mokayada.dao.AppPhotosRepository;
 import letapp.dev.mokayada.dao.AppRoleRepository;
 import letapp.dev.mokayada.dao.AppUserRepository;
 import letapp.dev.mokayada.dao.ItemRepository;
 import letapp.dev.mokayada.dao.OfferRepository;
-import letapp.dev.mokayada.entities.AppPhoto;
-import letapp.dev.mokayada.entities.AppRole;
-import letapp.dev.mokayada.entities.AppUser;
-import letapp.dev.mokayada.entities.Item;
-import letapp.dev.mokayada.entities.Offer;
 
 @SpringBootApplication
 public class MokayadaApplication implements CommandLineRunner {
@@ -37,6 +32,10 @@ public class MokayadaApplication implements CommandLineRunner {
 
 	}
 
+	/*
+	 * @Bean public BCryptPasswordEncoder getEncoder() { return new
+	 * BCryptPasswordEncoder(); }
+	 */
 	@Override
 	public void run(String... args) throws Exception {
 		/*

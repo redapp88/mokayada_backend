@@ -80,8 +80,12 @@ public class ItemsServiceImp implements ItemsService {
 		Optional<Item> itemOpt = this.itemRepository.findById(itemId);
 		if (!itemOpt.isPresent())
 			throw new RuntimeException("item introuvable");
+	
 		Item item = itemOpt.get();
-		 this.itemRepository.delete(item);
+		if(this.offerRepository.getByItem(item).size()>0)
+			throw new RuntimeException("Cet item fait partie d'une offre ou proposition supprimer la ou enlever l'item");
+		 item.setDeleted(true);
+		 this.itemRepository.save(item);
 	}
 	
 	private String formatParam(String param) {

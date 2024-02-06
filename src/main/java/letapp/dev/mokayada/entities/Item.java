@@ -28,6 +28,7 @@ public class Item {
 	private String title;
 	private String description;
 	private String status;
+	private boolean deleted;
 	private Date creationDate;
 	@ManyToOne
 	private AppUser owner;
@@ -45,7 +46,8 @@ public class Item {
 		this.photos = photos;
 		this.owner = owner;
 		this.offer = null;
-	}
+		this.deleted=false;
+		}
 	public Item(String title,String status,String description, AppUser owner) {
 		super();
 		this.title = title;
@@ -54,6 +56,7 @@ public class Item {
 		this.status = status;
 		this.owner = owner;
 		this.photos = new ArrayList<AppPhoto>();
+		this.deleted=false;
 	}
 	
 	

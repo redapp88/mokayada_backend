@@ -23,4 +23,6 @@ public interface OfferService  {
 	public void deleteProposal(Long id);
 	public Offer acceptProposal(Offer proposal);
 	public void deleteOffer(Long id);
+	public Page<ProposalWithOfferResponse> getMyContracts(String username, int page, int size);
+	public Page<ProposalWithOfferResponse> getReceivedContracts(String username, int page, int size);
 }
